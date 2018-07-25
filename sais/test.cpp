@@ -8,6 +8,7 @@ using algorithm::sais;
 
 int main()
 {
+    clock_t c(clock());
     std::string str;
     //str = "immissiissippi";
     //str = "aabaaaab";
@@ -18,17 +19,16 @@ int main()
     std::uniform_int_distribution<> uid2(0, 3);
 
     str.reserve(1000000000);
-    /*
-    for (size_t i(0); i < 10000000; i++)
-	str.push_back(uid1(gen) + 'a');
-    */
     std::unordered_map<int, char> m{{0, 'A'}, {1, 'C'}, {2, 'G'}, {3, 'T'}};
     for (size_t i(0); i < 1000000000; i++)
 	str.push_back(m[uid2(gen)]);
 
+    c = clock() - c;
+    std::cout << "Generate str " << (float)c / CLOCKS_PER_SEC << "sec\n";
     //std::cout << str << "\n";
+    std::cout << "SA-IS algorithm start:\n";
 
-    clock_t c(clock());
+    c = clock();
     auto v(sais(str));
     c = clock() - c;
     std::cout << "Total: " << (float)c / CLOCKS_PER_SEC << "sec\n";
