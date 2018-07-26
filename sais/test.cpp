@@ -1,3 +1,4 @@
+#include <gperftools/profiler.h>
 #include <iostream>
 #include <random>
 #include <string>
@@ -8,19 +9,21 @@ using algorithm::sais;
 
 int main()
 {
+    ProfilerStart("sais");
     clock_t c(clock());
     std::string str;
     //str = "immissiissippi";
     //str = "aabaaaab";
     //str = "mmississiippii";
+    ;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> uid1(0, 25);
     std::uniform_int_distribution<> uid2(0, 3);
 
-    str.reserve(1000000000);
+    str.reserve(30000000);
     std::unordered_map<int, char> m{{0, 'A'}, {1, 'C'}, {2, 'G'}, {3, 'T'}};
-    for (size_t i(0); i < 1000000000; i++)
+    for (size_t i(0); i < 30000000; i++)
 	str.push_back(m[uid2(gen)]);
 
     c = clock() - c;
@@ -33,6 +36,7 @@ int main()
     c = clock() - c;
     std::cout << "Total: " << (float)c / CLOCKS_PER_SEC << "sec\n";
 
+    ProfilerStop();
     /*
     for (const auto& i : v)
 	std::cout << i << " ";
