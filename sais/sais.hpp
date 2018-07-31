@@ -34,7 +34,7 @@ void sort_lms(std::vector<PairSize>&, const S&,
 	const std::vector<uint64_t>&);
 template <typename S>
 void put_bucket(const std::vector<PairSize>&, const S&, 
-	std::vector<size_t>&, InfoMap&, bool);
+	std::vector<size_t>&, InfoMap&);
 template <typename S>
 void induced_sort(const S&, const std::vector<bool>&, 
 	std::vector<size_t>&, InfoMap&);
@@ -88,7 +88,7 @@ std::vector<size_t> sais(const S& str)
     std::cout << "sort_lms: " << (float)(clock() - c) / CLOCKS_PER_SEC << "sec\n";
 
     c = clock();
-    put_bucket(v_lms, buf, bucket, bucket_info, true);
+    put_bucket(v_lms, buf, bucket, bucket_info);
     std::cout << "put_bucket: " << (float)(clock() - c) / CLOCKS_PER_SEC << "sec\n";
 
     c = clock();
@@ -229,7 +229,7 @@ void sort_lms(std::vector<PairSize>& v_lms, const S& sv,
 	InfoMap& bucket_info, const std::vector<uint64_t>& val_rank)
 {
     clock_t c(clock());
-    put_bucket(v_lms, sv, bucket, bucket_info, false);
+    put_bucket(v_lms, sv, bucket, bucket_info);
     std::cout << "sort_lms-put_bucket: " << (float)(clock() - c) / CLOCKS_PER_SEC << "sec\n";
     init_bucket_info(sv, type, bucket_info, val_rank);
     c = clock();
@@ -259,23 +259,12 @@ void sort_lms(std::vector<PairSize>& v_lms, const S& sv,
 template <typename S>
 void put_bucket(const std::vector<PairSize>& v_lms, 
 	const S& sv, std::vector<size_t>& bucket, 
-	InfoMap& bucket_info, bool b)
+	InfoMap& bucket_info)
 {
-    if (!b)
+    for (const auto& lms : v_lms)
     {
-	for (const auto& lms : v_lms)
-	{
-	    auto& info(bucket_info[sv[lms.first]]);
-	    bucket[info.second.second--] = lms.first;
-	}
-    }
-    else
-    {
-	for (const auto& lms : v_lms)
-	{
-	    auto& info(bucket_info[sv[lms.first]]);
-	    bucket[info.second.first++] = lms.first;
-	}
+	auto& info(bucket_info[sv[lms.first]]);
+	bucket[info.second.first++] = lms.first;
     }
 }
 
